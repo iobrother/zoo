@@ -13,3 +13,11 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+# Workspaces
+*.work
+*.work.sum
+
+*.DS_Store
+.idea
+.vscode
