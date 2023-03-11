@@ -1,0 +1,17 @@
+version: "v1"
+managed:
+  enabled: true
+  go_package_prefix:
+    default: github.com/iobrother/zoo/examples/gen
+    except:
+      - buf.build/googleapis/googleapis
+plugins:
+  - name: go
+    out: gen/api
+    opt: paths=source_relative
+  - name: zoo-http
+    out: gen/api
+    opt: paths=source_relative
+  - name: rpcx
+    out: gen/api
+    opt: paths=source_relative

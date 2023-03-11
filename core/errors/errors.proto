@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package errors;
+
+option go_package = "github.com/iobrother/zoo/core/errors";
+
+message Error {
+  int32 code = 1;
+  string message = 2;
+  string detail = 3;
+}
+
