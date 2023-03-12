@@ -1,6 +1,7 @@
 run:
   timeout: 5m
-
+  skip-files:
+    - _test.go
 linters:
   disable-all: true
   enable:
@@ -10,7 +11,6 @@ linters:
     - durationcheck
     - exhaustive
     - exportloopref
-    - gci
     - gofmt
     - gofumpt
     - goimports
@@ -30,7 +30,6 @@ linters:
     - revive
     - sqlclosecheck
     - staticcheck
-    - stylecheck
     - tparallel
     - typecheck
     - unconvert
@@ -45,6 +44,7 @@ linters:
     # - exhaustivestruct
     # - forbidigo
     # - forcetypeassert
+    # - gci
     # - gochecknoglobals
     # - gochecknoinits
     # - gocognit
@@ -59,6 +59,7 @@ linters:
     # - nlreturn
     # - paralleltest
     # - scopelint
+    # - stylecheck
     # - thelper
     # - wrapcheck
 
@@ -84,3 +85,9 @@ linters:
     # - nestif
     # - testpackage
     # - wsl
+linters-settings:
+  revive:
+    rules:
+      - name: var-naming
+        severity: warning
+        disabled: true

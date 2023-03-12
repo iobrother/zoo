@@ -21,9 +21,7 @@ import (
 	"github.com/iobrother/zoo/core/util/env"
 )
 
-var (
-	slowThreshold = time.Millisecond * 500
-)
+const slowThreshold = time.Millisecond * 500
 
 type rspWriter struct {
 	gin.ResponseWriter
@@ -75,7 +73,7 @@ func skipResponseBody(c *gin.Context) bool {
 
 func Log() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var start = time.Now()
+		start := time.Now()
 
 		respBodyBuf := &bytes.Buffer{}
 		reqBody := "skip request body"

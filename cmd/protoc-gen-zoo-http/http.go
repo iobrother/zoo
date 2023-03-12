@@ -52,8 +52,8 @@ func generateFile(gen *protogen.Plugin, file *protogen.File, omitempty bool) *pr
 	filename := file.GeneratedFilenamePrefix + "_http.pb.go"
 	g := gen.NewGeneratedFile(filename, file.GoImportPath)
 	generateHeader(gen, file, g)
-	generateImports(gen, file, g)
-	generateFileContent(gen, file, g, omitempty)
+	generateImports(g)
+	generateFileContent(file, g, omitempty)
 	return g
 }
 
@@ -72,7 +72,7 @@ func generateHeader(gen *protogen.Plugin, file *protogen.File, g *protogen.Gener
 	g.P()
 }
 
-func generateImports(gen *protogen.Plugin, file *protogen.File, g *protogen.GeneratedFile) {
+func generateImports(g *protogen.GeneratedFile) {
 	g.P("// Reference imports to suppress errors if they are not otherwise used.")
 	g.P("var _ = ", contextPackage.Ident("TODO"))
 	g.P("var _ = ", netHttpPackage.Ident("NewServer"))
@@ -92,17 +92,16 @@ func protocVersion(gen *protogen.Plugin) string {
 }
 
 // generateFileContent generates the errors definitions, excluding the package statement.
-func generateFileContent(gen *protogen.Plugin, file *protogen.File, g *protogen.GeneratedFile, omitempty bool) {
+func generateFileContent(file *protogen.File, g *protogen.GeneratedFile, omitempty bool) {
 	if len(file.Services) == 0 {
 		return
 	}
 	for _, service := range file.Services {
-		genService(gen, file, g, service, omitempty)
+		genService(file, g, service, omitempty)
 	}
 }
 
-func genService(gen *protogen.Plugin, file *protogen.File,
-	g *protogen.GeneratedFile, service *protogen.Service, omitempty bool) {
+func genService(file *protogen.File, g *protogen.GeneratedFile, service *protogen.Service, omitempty bool) {
 	if service.Desc.Options().(*descriptorpb.ServiceOptions).GetDeprecated() {
 		g.P("//")
 		g.P(deprecationComment)

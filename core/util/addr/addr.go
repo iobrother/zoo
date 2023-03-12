@@ -5,9 +5,7 @@ import (
 	"net"
 )
 
-var (
-	privateBlocks []*net.IPNet
-)
+var privateBlocks []*net.IPNet
 
 func init() {
 	blocks := []string{

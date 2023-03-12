@@ -25,7 +25,7 @@ func testWithField(t *testing.T) {
 
 func testWithContext(t *testing.T) {
 	ctx := context.TODO()
-	ctx = context.WithValue(ctx, "requestId", "req-1") //nolint:staticcheck,revive
+	ctx = context.WithValue(ctx, "requestId", "req-1")
 	l := WithContext(ctx, "requestId")
 	l.Info("testWithContext")
 }
