@@ -488,8 +488,8 @@ github.com/sirupsen/logrus v1.4.2/go.mod h1:tLMulIdttU9McNUspp0xgXVQah82FyeX6Mwd
 github.com/sirupsen/logrus v1.6.0/go.mod h1:7uNnSEd1DgxDLC74fIahvMZmmYsHGZGEOFrfsX/uA88=
 github.com/smallnest/quick v0.0.0-20220703133648-f13409fa6c67 h1:eIa+/FyZCItCSwE1tjTEzYYHEk+5vtAw3jCW8DlnP3g=
 github.com/smallnest/quick v0.0.0-20220703133648-f13409fa6c67/go.mod h1:0UHAX9lwPR4gsKF94tv4fQIDIF+POCyixbrBp/zK6To=
-github.com/smallnest/rpcx v1.8.3 h1:T+3VI5hvXPte2RWdHyWJRcGAqBQ+x3XiqQX3ZSdpDLE=
-github.com/smallnest/rpcx v1.8.3/go.mod h1:xaWp36VfbcnAOR/T/EK6LpB+MiUdC8O4qZbVw/ZgGtI=
+github.com/smallnest/rpcx v1.8.4 h1:KnzBliu/gES8jxnTUugX6eeF7JucWJ4ezYLLVXO83g8=
+github.com/smallnest/rpcx v1.8.4/go.mod h1:xaWp36VfbcnAOR/T/EK6LpB+MiUdC8O4qZbVw/ZgGtI=
 github.com/soheilhy/cmux v0.1.5 h1:jjzc5WVemNEDTLwv9tlmemhC73tI08BNOIGwBOo10Js=
 github.com/soheilhy/cmux v0.1.5/go.mod h1:T7TcVDs9LWfQgPlPsdngu6I6QIoyIFZDDC6sNE1GqG0=
 github.com/sourcegraph/annotate v0.0.0-20160123013949-f4cad6c6324d/go.mod h1:UdhH50NIW0fCiwBSr0co2m7BnFLdv4fQTgdqdJTHFeE=
