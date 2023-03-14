@@ -8,7 +8,7 @@ require (
 	github.com/go-playground/form/v4 v4.2.0
 	github.com/rpcxio/rpcx-etcd v0.2.0
 	github.com/rpcxio/rpcx-plugins v0.0.0-20220730073026-120f5ed14272
-	github.com/smallnest/rpcx v1.8.3
+	github.com/smallnest/rpcx v1.8.4
 	github.com/spf13/viper v1.15.0
 	go.opentelemetry.io/otel v1.14.0
 	go.opentelemetry.io/otel/exporters/jaeger v1.14.0
