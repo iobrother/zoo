@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package proto.errapi;
+
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+
+service ErrAPI {
+  rpc SayHello(HelloRequest) returns (HelloReply) {
+    option (google.api.http) = {
+      get: "/hello/{name}"
+    };
+  }
+  rpc TestError(ErrorRequest) returns (ErrorReply) {
+    option (google.api.http) = {
+      get: "/error/{name}"
+    };
+  }
+}
+
+message HelloRequest {
+  string name = 1;
+}
+
+message HelloReply {
+  string message = 1;
+}
+
+message ErrorRequest {
+  string name = 1;
+}
+
+message ErrorReply {
+  string message = 1;
+}

@@ -92,7 +92,7 @@ func New(opts ...Option) *App {
 			MaxAge:     zc.Logger.MaxAge,
 			Compress:   zc.Logger.Compress,
 		}
-		l := log.NewTee([]io.Writer{os.Stderr, w}, level, log.WithCaller(true))
+		l := log.NewTee([]io.Writer{os.Stderr, w}, level, log.WithCaller(true), log.Development())
 		log.ResetDefault(l)
 	} else {
 		w := &lumberjack.Logger{

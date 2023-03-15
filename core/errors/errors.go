@@ -4,24 +4,45 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 )
 
 //go:generate protoc --go_out=:. --go_opt=paths=source_relative errors.proto
 
 func New(code int32, message, detail string) *Error {
-	return &Error{
-		Code:    code,
-		Message: message,
-		Detail:  detail,
+	e := &Error{
+		Code:     code,
+		Message:  message,
+		Detail:   detail,
+		Metadata: map[string]string{},
 	}
+
+	e.Metadata["_zoo_error_stack"] = stacktrace()
+	return e
 }
 
 func Newf(code int32, message, format string, a ...any) *Error {
-	return New(code, message, fmt.Sprintf(format, a...))
+	e := &Error{
+		Code:     code,
+		Message:  message,
+		Detail:   fmt.Sprintf(format, a...),
+		Metadata: map[string]string{},
+	}
+
+	e.Metadata["_zoo_error_stack"] = stacktrace()
+	return e
 }
 
 func Errorf(code int32, message, format string, a ...any) error {
-	return New(code, message, fmt.Sprintf(format, a...))
+	e := &Error{
+		Code:     code,
+		Message:  message,
+		Detail:   fmt.Sprintf(format, a...),
+		Metadata: map[string]string{},
+	}
+
+	e.Metadata["_zoo_error_stack"] = stacktrace()
+	return e
 }
 
 func Parse(err string) *Error {
@@ -29,6 +50,7 @@ func Parse(err string) *Error {
 	errr := json.Unmarshal([]byte(err), e)
 	if errr != nil {
 		e.Code = 500
+		e.Message = "Internal Server Error"
 		e.Detail = err
 	}
 	if e.Code == 0 {
@@ -49,6 +71,23 @@ func FromError(err error) *Error {
 	return Parse(err.Error())
 }
 
+func (x *Error) clone() *Error {
+	if x == nil {
+		return nil
+	}
+
+	metadata := make(map[string]string, len(x.Metadata))
+	for k, v := range x.Metadata {
+		metadata[k] = v
+	}
+	return &Error{
+		Code:     x.Code,
+		Message:  x.Message,
+		Detail:   x.Detail,
+		Metadata: metadata,
+	}
+}
+
 func (x *Error) Error() string {
 	b, _ := json.Marshal(x)
 	return string(b)
@@ -59,4 +98,34 @@ func Code(err error) int {
 		return 200
 	}
 	return int(FromError(err).Code)
+}
+
+func (x *Error) Format(s fmt.State, verb rune) {
+	copied := x.clone()
+	delete(copied.Metadata, "_zoo_error_stack")
+	msg := fmt.Sprintf("error: code = %d message = %s detail = %s metadata = %v", x.Code, x.Message, x.Detail, copied.Metadata)
+
+	switch verb {
+	case 's', 'v':
+		switch {
+		case s.Flag('+'):
+			_, _ = io.WriteString(s, msg+"\n"+x.Stack())
+
+		default:
+			_, _ = io.WriteString(s, msg)
+		}
+	}
+}
+
+func WrapRpcError(err error) *Error {
+	if err == nil {
+		return nil
+	}
+
+	e := FromError(err)
+	if e.Metadata["_zoo_error_stack"] != "" {
+		e.Metadata["_zoo_error_stack"] = stacktrace() + "\n" + e.Metadata["_zoo_error_stack"]
+	}
+
+	return e
 }

@@ -32,11 +32,5 @@ func (s *GreeterImpl) SayHello(ctx context.Context, req *greeter.HelloRequest, r
 		Message: fmt.Sprintf("hello %s!", req.Name),
 	}
 
-	//return zcode.New(10080, "biz error", "detail")
-
-	//return fmt.Errorf("aaaaaaaaaaaaa")
-
-	//return errors.New(10080, "biz error", "detail")
-
 	return nil
 }
