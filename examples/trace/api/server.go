@@ -2,11 +2,12 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+
 	"github.com/iobrother/zoo"
 	"github.com/iobrother/zoo/core/log"
 	"github.com/iobrother/zoo/core/transport/http"
 	"github.com/iobrother/zoo/core/transport/rpc/client"
-	"github.com/iobrother/zoo/examples/gen/api/greeter"
+	"github.com/iobrother/zoo/examples/gen/greeter"
 )
 
 // curl http://127.0.0.1:5180/hello/zoo

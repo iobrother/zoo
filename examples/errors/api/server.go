@@ -3,13 +3,14 @@ package main
 import (
 	"context"
 	"fmt"
+
 	"github.com/iobrother/zoo"
 	"github.com/iobrother/zoo/core/errors"
 	"github.com/iobrother/zoo/core/log"
 	"github.com/iobrother/zoo/core/transport/http"
 	"github.com/iobrother/zoo/core/transport/http/middleware/error_response"
 	"github.com/iobrother/zoo/core/transport/rpc/client"
-	"github.com/iobrother/zoo/examples/gen/api/errapi"
+	"github.com/iobrother/zoo/examples/gen/errapi"
 )
 
 // curl -w " status=%{http_code}" http://localhost:5180/error/unknown

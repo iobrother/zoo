@@ -9,8 +9,8 @@ import (
 	"github.com/iobrother/zoo/core/config"
 )
 
-func (x *Error) Stack() string {
-	return x.Metadata["_zoo_error_stack"]
+func (e *Error) Stack() string {
+	return e.Metadata["_zoo_error_stack"]
 }
 
 var goRootForFilter = runtime.GOROOT()

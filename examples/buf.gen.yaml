@@ -8,14 +8,14 @@ managed:
       - buf.build/iobrother/zoo
 plugins:
   - name: go
-    out: gen/api
+    out: gen
     opt: paths=source_relative
   - name: zoo-http
-    out: gen/api
+    out: gen
     opt: paths=source_relative
   - name: rpcx
-    out: gen/api
+    out: gen
     opt: paths=source_relative
   - name: zoo-errno
-    out: gen/api
+    out: gen
     opt: paths=source_relative

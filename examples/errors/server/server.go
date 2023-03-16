@@ -3,11 +3,11 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/iobrother/zoo/examples/gen/api/errno"
 
 	"github.com/iobrother/zoo"
 	"github.com/iobrother/zoo/core/log"
-	"github.com/iobrother/zoo/examples/gen/api/errapi"
+	"github.com/iobrother/zoo/examples/gen/errapi"
+	"github.com/iobrother/zoo/examples/gen/errno"
 	"github.com/smallnest/rpcx/server"
 )
 

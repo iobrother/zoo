@@ -76,25 +76,25 @@ func FromError(err error) *Error {
 	return Parse(err.Error())
 }
 
-func (x *Error) clone() *Error {
-	if x == nil {
+func (e *Error) clone() *Error {
+	if e == nil {
 		return nil
 	}
 
-	metadata := make(map[string]string, len(x.Metadata))
-	for k, v := range x.Metadata {
+	metadata := make(map[string]string, len(e.Metadata))
+	for k, v := range e.Metadata {
 		metadata[k] = v
 	}
 	return &Error{
-		Code:     x.Code,
-		Message:  x.Message,
-		Detail:   x.Detail,
+		Code:     e.Code,
+		Message:  e.Message,
+		Detail:   e.Detail,
 		Metadata: metadata,
 	}
 }
 
-func (x *Error) Error() string {
-	b, _ := json.Marshal(x)
+func (e *Error) Error() string {
+	b, _ := json.Marshal(e)
 	return string(b)
 }
 
@@ -105,16 +105,16 @@ func Code(err error) int {
 	return int(FromError(err).Code)
 }
 
-func (x *Error) Format(s fmt.State, verb rune) {
-	copied := x.clone()
+func (e *Error) Format(s fmt.State, verb rune) {
+	copied := e.clone()
 	delete(copied.Metadata, "_zoo_error_stack")
-	msg := fmt.Sprintf("error: code = %d message = %s detail = %s metadata = %v", x.Code, x.Message, x.Detail, copied.Metadata)
+	msg := fmt.Sprintf("error: code = %d message = %s detail = %s metadata = %v", e.Code, e.Message, e.Detail, copied.Metadata)
 
 	switch verb {
 	case 's', 'v':
 		switch {
 		case s.Flag('+'):
-			_, _ = io.WriteString(s, msg+"\n"+x.Stack())
+			_, _ = io.WriteString(s, msg+"\n"+e.Stack())
 
 		default:
 			_, _ = io.WriteString(s, msg)

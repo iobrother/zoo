@@ -8,7 +8,7 @@ import (
 	"github.com/iobrother/zoo/core/log"
 	"github.com/iobrother/zoo/core/transport/http"
 	"github.com/iobrother/zoo/core/transport/http/middleware/error_response"
-	"github.com/iobrother/zoo/examples/gen/api/greeter"
+	"github.com/iobrother/zoo/examples/gen/greeter"
 )
 
 // curl http://127.0.0.1:5180/hello/zoo

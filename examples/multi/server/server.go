@@ -8,7 +8,7 @@ import (
 	"github.com/iobrother/zoo"
 	"github.com/iobrother/zoo/core/log"
 	"github.com/iobrother/zoo/core/transport/http"
-	"github.com/iobrother/zoo/examples/gen/api/greeter"
+	"github.com/iobrother/zoo/examples/gen/greeter"
 	"github.com/smallnest/rpcx/server"
 )
 

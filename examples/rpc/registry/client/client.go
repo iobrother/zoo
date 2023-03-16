@@ -5,7 +5,7 @@ import (
 
 	"github.com/iobrother/zoo/core/log"
 	"github.com/iobrother/zoo/core/transport/rpc/client"
-	"github.com/iobrother/zoo/examples/gen/api/greeter"
+	"github.com/iobrother/zoo/examples/gen/greeter"
 )
 
 func main() {
