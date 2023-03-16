@@ -5,6 +5,7 @@ managed:
     default: github.com/iobrother/zoo/examples/gen
     except:
       - buf.build/googleapis/googleapis
+      - buf.build/iobrother/zoo
 plugins:
   - name: go
     out: gen/api
@@ -13,5 +14,8 @@ plugins:
     out: gen/api
     opt: paths=source_relative
   - name: rpcx
+    out: gen/api
+    opt: paths=source_relative
+  - name: zoo-errno
     out: gen/api
     opt: paths=source_relative

@@ -7,7 +7,12 @@ import (
 	"io"
 )
 
-//go:generate protoc --go_out=:. --go_opt=paths=source_relative errors.proto
+type Error struct {
+	Code     int32             `json:"code,omitempty"`
+	Message  string            `json:"message,omitempty"`
+	Detail   string            `json:"detail,omitempty"`
+	Metadata map[string]string `json:"metadata,omitempty"`
+}
 
 func New(code int32, message, detail string) *Error {
 	e := &Error{

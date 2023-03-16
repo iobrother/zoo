@@ -3,19 +3,17 @@ package errors
 import (
 	"bytes"
 	"fmt"
-	"github.com/iobrother/zoo/core/config"
 	"runtime"
 	"strings"
+
+	"github.com/iobrother/zoo/core/config"
 )
 
 func (x *Error) Stack() string {
 	return x.Metadata["_zoo_error_stack"]
 }
 
-var (
-	// goRootForFilter is used for stack filtering in development environment purpose.
-	goRootForFilter = runtime.GOROOT()
-)
+var goRootForFilter = runtime.GOROOT()
 
 func init() {
 	if goRootForFilter != "" {
@@ -34,7 +32,7 @@ type StackLine struct {
 }
 
 func formatStackInfo(info *StackInfo) string {
-	var buffer = bytes.NewBuffer(nil)
+	buffer := bytes.NewBuffer(make([]byte, 0, 1024))
 	buffer.WriteString(fmt.Sprintf("service: %s\n", info.Service))
 	space := "  "
 	for i, line := range info.Lines {
@@ -80,7 +78,6 @@ func stacktrace() string {
 					FileLine: fileLine,
 				})
 			}
-
 		}
 	}
 
