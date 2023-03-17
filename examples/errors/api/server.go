@@ -34,9 +34,10 @@ func main() {
 	}
 }
 
-func InitHttpServer(r *http.Server) error {
-	r.UseEx(error_response.ErrorResponse())
-	errapi.RegisterErrAPIHTTPService(r, &ErrImpl{})
+func InitHttpServer(s *http.Server) error {
+	s.Use(error_response.ErrorResponse())
+	g := s.Group("")
+	errapi.RegisterErrAPIHTTPService(g, &ErrImpl{})
 
 	return nil
 }

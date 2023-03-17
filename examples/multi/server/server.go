@@ -3,8 +3,8 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/iobrother/zoo/core/transport/http/middleware/error_response"
 
-	"github.com/gin-gonic/gin"
 	"github.com/iobrother/zoo"
 	"github.com/iobrother/zoo/core/log"
 	"github.com/iobrother/zoo/core/transport/http"
@@ -41,9 +41,9 @@ func (s *GreeterImpl) SayHello(ctx context.Context, req *greeter.HelloRequest, r
 }
 
 func InitHttpServer(s *http.Server) error {
-	gin.DisableBindValidation()
-
-	greeter.RegisterGreeterHTTPService(s, &HttpGreeter{})
+	s.Use(error_response.ErrorResponse())
+	g := s.Group("")
+	greeter.RegisterGreeterHTTPService(g, &HttpGreeter{})
 
 	return nil
 }

@@ -7,15 +7,17 @@ type {{$svcType}}HTTPService interface {
 {{- end}}
 }
 
-func Register{{$svcType}}HTTPService(s *http.Server, svc {{$svcType}}HTTPService) {
+func Register{{$svcType}}HTTPService(g *gin.RouterGroup, svc {{$svcType}}HTTPService) {
+    r := g.Group("")
 	{{- range .Methods}}
-	s.{{.Method}}Ex("{{.Path}}", _{{$svcType}}_{{.Name}}{{.Num}}_HTTP_Handler(svc))
+	r.{{.Method}}("{{.Path}}", _{{$svcType}}_{{.Name}}{{.Num}}_HTTP_Handler(svc))
 	{{- end}}
 }
 
 {{range .Methods}}
-func _{{$svcType}}_{{.Name}}{{.Num}}_HTTP_Handler(svc {{$svcType}}HTTPService) http.HandlerFunc {
-	return func(c *http.Context) {
+func _{{$svcType}}_{{.Name}}{{.Num}}_HTTP_Handler(svc {{$svcType}}HTTPService) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+        c := &http.Context{Context: ctx}
 		shouldBind := func(req *{{.Request}}) error {
 			{{- if .HasBody}}
 			if err := c.ShouldBind(req{{.Body}}); err != nil {

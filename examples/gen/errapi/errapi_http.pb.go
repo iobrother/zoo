@@ -8,11 +8,13 @@ package errapi
 
 import (
 	context "context"
+	gin "github.com/gin-gonic/gin"
 	http "github.com/iobrother/zoo/core/transport/http"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = context.TODO
+var _ = gin.New
 var _ = http.NewServer
 
 type ErrAPIHTTPService interface {
@@ -22,13 +24,15 @@ type ErrAPIHTTPService interface {
 	TestError(context.Context, *ErrorRequest) (*ErrorReply, error)
 }
 
-func RegisterErrAPIHTTPService(s *http.Server, svc ErrAPIHTTPService) {
-	s.GetEx("/hello/:name", _ErrAPI_SayHello0_HTTP_Handler(svc))
-	s.GetEx("/error/:name", _ErrAPI_TestError0_HTTP_Handler(svc))
+func RegisterErrAPIHTTPService(g *gin.RouterGroup, svc ErrAPIHTTPService) {
+	r := g.Group("")
+	r.GET("/hello/:name", _ErrAPI_SayHello0_HTTP_Handler(svc))
+	r.GET("/error/:name", _ErrAPI_TestError0_HTTP_Handler(svc))
 }
 
-func _ErrAPI_SayHello0_HTTP_Handler(svc ErrAPIHTTPService) http.HandlerFunc {
-	return func(c *http.Context) {
+func _ErrAPI_SayHello0_HTTP_Handler(svc ErrAPIHTTPService) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		c := &http.Context{Context: ctx}
 		shouldBind := func(req *HelloRequest) error {
 			if err := c.ShouldBindQuery(req); err != nil {
 				return err
@@ -55,8 +59,9 @@ func _ErrAPI_SayHello0_HTTP_Handler(svc ErrAPIHTTPService) http.HandlerFunc {
 		c.JSON(200, rsp)
 	}
 }
-func _ErrAPI_TestError0_HTTP_Handler(svc ErrAPIHTTPService) http.HandlerFunc {
-	return func(c *http.Context) {
+func _ErrAPI_TestError0_HTTP_Handler(svc ErrAPIHTTPService) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		c := &http.Context{Context: ctx}
 		shouldBind := func(req *ErrorRequest) error {
 			if err := c.ShouldBindQuery(req); err != nil {
 				return err

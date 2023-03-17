@@ -20,9 +20,10 @@ func main() {
 	}
 }
 
-func InitHttpServer(r *http.Server) error {
-	r.UseEx(error_response.ErrorResponse())
-	greeter.RegisterGreeterHTTPService(r, &GreeterImpl{})
+func InitHttpServer(s *http.Server) error {
+	s.Use(error_response.ErrorResponse())
+	g := s.Group("")
+	greeter.RegisterGreeterHTTPService(g, &GreeterImpl{})
 
 	return nil
 }

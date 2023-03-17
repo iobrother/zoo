@@ -8,11 +8,13 @@ package greeter
 
 import (
 	context "context"
+	gin "github.com/gin-gonic/gin"
 	http "github.com/iobrother/zoo/core/transport/http"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = context.TODO
+var _ = gin.New
 var _ = http.NewServer
 
 type GreeterHTTPService interface {
@@ -20,12 +22,14 @@ type GreeterHTTPService interface {
 	SayHello(context.Context, *HelloRequest) (*HelloReply, error)
 }
 
-func RegisterGreeterHTTPService(s *http.Server, svc GreeterHTTPService) {
-	s.GetEx("/hello/:name", _Greeter_SayHello0_HTTP_Handler(svc))
+func RegisterGreeterHTTPService(g *gin.RouterGroup, svc GreeterHTTPService) {
+	r := g.Group("")
+	r.GET("/hello/:name", _Greeter_SayHello0_HTTP_Handler(svc))
 }
 
-func _Greeter_SayHello0_HTTP_Handler(svc GreeterHTTPService) http.HandlerFunc {
-	return func(c *http.Context) {
+func _Greeter_SayHello0_HTTP_Handler(svc GreeterHTTPService) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		c := &http.Context{Context: ctx}
 		shouldBind := func(req *HelloRequest) error {
 			if err := c.ShouldBindQuery(req); err != nil {
 				return err

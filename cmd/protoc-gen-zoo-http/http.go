@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 	"os"
 	"strings"
 
@@ -15,20 +16,9 @@ import (
 
 const deprecationComment = "// Deprecated: Do not use."
 
-const (
-	methodGet     = "Get"
-	methodHead    = "Head"
-	methodPost    = "Post"
-	methodPut     = "Put"
-	methodPatch   = "Patch"
-	MethodDelete  = "Delete"
-	methodConnect = "Connect"
-	methodOptions = "Options"
-	methodTrace   = "Trace"
-)
-
 var (
 	contextPackage = protogen.GoImportPath("context")
+	ginPackage     = protogen.GoImportPath("github.com/gin-gonic/gin")
 	netHttpPackage = protogen.GoImportPath("github.com/iobrother/zoo/core/transport/http")
 )
 
@@ -75,6 +65,7 @@ func generateHeader(gen *protogen.Plugin, file *protogen.File, g *protogen.Gener
 func generateImports(g *protogen.GeneratedFile) {
 	g.P("// Reference imports to suppress errors if they are not otherwise used.")
 	g.P("var _ = ", contextPackage.Ident("TODO"))
+	g.P("var _ = ", ginPackage.Ident("New"))
 	g.P("var _ = ", netHttpPackage.Ident("NewServer"))
 	g.P()
 }
@@ -124,7 +115,7 @@ func genService(file *protogen.File, g *protogen.GeneratedFile, service *protoge
 			sd.Methods = append(sd.Methods, buildHTTPRule(g, method, rule))
 		} else if !omitempty {
 			path := fmt.Sprintf("/%s/%s", service.Desc.FullName(), method.Desc.Name())
-			sd.Methods = append(sd.Methods, buildMethodDesc(g, method, methodPost, path))
+			sd.Methods = append(sd.Methods, buildMethodDesc(g, method, http.MethodPost, path))
 		}
 	}
 	if len(sd.Methods) == 0 {
@@ -162,19 +153,19 @@ func buildHTTPRule(g *protogen.GeneratedFile, m *protogen.Method, rule *annotati
 	switch pattern := rule.Pattern.(type) {
 	case *annotations.HttpRule_Get:
 		path = pattern.Get
-		method = methodGet
+		method = http.MethodGet
 	case *annotations.HttpRule_Put:
 		path = pattern.Put
-		method = methodPut
+		method = http.MethodPut
 	case *annotations.HttpRule_Post:
 		path = pattern.Post
-		method = methodPost
+		method = http.MethodPost
 	case *annotations.HttpRule_Delete:
 		path = pattern.Delete
-		method = MethodDelete
+		method = http.MethodDelete
 	case *annotations.HttpRule_Patch:
 		path = pattern.Patch
-		method = methodPatch
+		method = http.MethodPatch
 	case *annotations.HttpRule_Custom:
 		path = pattern.Custom.Path
 		method = pattern.Custom.Kind
@@ -183,13 +174,13 @@ func buildHTTPRule(g *protogen.GeneratedFile, m *protogen.Method, rule *annotati
 	responseBody = rule.ResponseBody
 	md := buildMethodDesc(g, m, method, path)
 	switch {
-	case method == methodGet:
+	case method == http.MethodGet:
 		if body != "" {
 			_, _ = fmt.Fprintf(os.Stderr,
 				"\u001B[31mWARN\u001B[m: %s %s body should not be declared.\n", method, path)
 		}
 		md.HasBody = false
-	case method == MethodDelete:
+	case method == http.MethodDelete:
 		if body != "" {
 			md.HasBody = true
 			if !*allowDeleteBody {
@@ -199,7 +190,7 @@ func buildHTTPRule(g *protogen.GeneratedFile, m *protogen.Method, rule *annotati
 		} else {
 			md.HasBody = false
 		}
-	case method == methodPatch:
+	case method == http.MethodPatch:
 		if body != "" {
 			md.HasBody = true
 		} else {

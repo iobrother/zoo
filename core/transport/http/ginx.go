@@ -55,23 +55,6 @@ func (c *Context) ShouldBindQuery(v any) error {
 
 type HandlerFunc func(*Context)
 
-func (s *Server) GroupEx(path string, handlers ...HandlerFunc) *Server {
-	if len(handlers) == 0 {
-		return s
-	}
-	gHandlers := make([]gin.HandlerFunc, 0, len(handlers))
-	for _, h := range handlers {
-		handler := func(c *gin.Context) {
-			h(&Context{Context: c})
-		}
-		gHandlers = append(gHandlers, handler)
-	}
-
-	s.Group(path, gHandlers...)
-
-	return s
-}
-
 func (s *Server) UseEx(middlewares ...HandlerFunc) {
 	if len(middlewares) == 0 {
 		return
