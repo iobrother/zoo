@@ -1,9 +1,10 @@
 app:
   name: "example"
+http:
+  addr: ":5180"
+  mode: "debug"
 registry:
   basePath: "/zoo"
   updateInterval: 30
   etcdAddr:
     - "127.0.0.1:2379"
-rpc:
-  addr: ""

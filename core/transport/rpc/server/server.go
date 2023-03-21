@@ -58,7 +58,7 @@ func (s *Server) Start() error {
 	log.Infof("Server [RPCX] listening on %s", a)
 	go func() {
 		if err := s.server.ServeListener("tcp", l); err != nil {
-			log.Fatal(err.Error())
+			log.Fatal(err)
 		}
 	}()
 	return nil
@@ -79,7 +79,7 @@ func (s *Server) register(a string) {
 	if cnt := strings.Count(a, ":"); cnt >= 1 {
 		host, port, err = net.SplitHostPort(a)
 		if err != nil {
-			log.Fatal(err.Error())
+			log.Fatal(err)
 			return
 		}
 	} else {
@@ -88,7 +88,7 @@ func (s *Server) register(a string) {
 
 	address, err := addr.Extract(host)
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Fatal(err)
 	}
 
 	if port != "" {
@@ -103,7 +103,7 @@ func (s *Server) register(a string) {
 	}
 	err = r.Start()
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Fatal(err)
 	}
 	s.server.Plugins.Add(r)
 

@@ -1,11 +1,14 @@
 package http
 
+import "github.com/iobrother/zoo/core/registry"
+
 type Options struct {
 	Name           string
 	Addr           string
 	InitHttpServer InitHttpServerFunc
 	Mode           string
 	Tracing        bool
+	Registry       registry.Registry
 }
 
 type Option func(*Options)
@@ -29,6 +32,12 @@ func Name(s string) Option {
 func Addr(s string) Option {
 	return func(o *Options) {
 		o.Addr = s
+	}
+}
+
+func Registry(r registry.Registry) Option {
+	return func(o *Options) {
+		o.Registry = r
 	}
 }
 

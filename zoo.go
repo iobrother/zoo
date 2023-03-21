@@ -18,6 +18,8 @@ import (
 
 	"github.com/iobrother/zoo/core/config"
 	"github.com/iobrother/zoo/core/log"
+	"github.com/iobrother/zoo/core/registry"
+	"github.com/iobrother/zoo/core/registry/etcd"
 	"github.com/iobrother/zoo/core/transport/http"
 	"github.com/iobrother/zoo/core/transport/rpc/server"
 	"github.com/iobrother/zoo/core/util/env"
@@ -71,7 +73,7 @@ func New(opts ...Option) *App {
 	options := newOptions(opts...)
 	zc := &zconfig{}
 	if err := config.Unmarshal(zc); err != nil {
-		log.Fatal(err.Error())
+		log.Fatal(err)
 	}
 	fmt.Println(zc)
 	if zc.App.Name == "" {
@@ -134,11 +136,22 @@ func New(opts ...Option) *App {
 	}
 
 	if config.Get("http") != nil {
+		var r registry.Registry
+		var opts []etcd.Option
+		if zc.Registry.BasePath != "" {
+			opts = append(opts, etcd.BasePath(zc.Registry.BasePath))
+		}
+		if len(zc.Registry.EtcdAddr) > 0 {
+			opts = append(opts, etcd.Addrs(zc.Registry.EtcdAddr...))
+			r = etcd.NewRegistry(opts...)
+		}
+
 		app.httpServer = http.NewServer(
 			http.Name(zc.App.Name),
 			http.Addr(zc.Http.Addr),
 			http.Mode(mode),
 			http.Tracing(tracing),
+			http.Registry(r),
 		)
 		app.httpServer.Init(http.InitHttpServer(app.opts.InitHttpServer))
 	}
@@ -149,7 +162,7 @@ func New(opts ...Option) *App {
 func setTracerProvider(endpoint string, name string) *trace.TracerProvider {
 	exp, err := jaeger.New(jaeger.WithCollectorEndpoint(jaeger.WithEndpoint(endpoint)))
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Fatal(err)
 	}
 	tp := trace.NewTracerProvider(
 		trace.WithSampler(trace.AlwaysSample()),

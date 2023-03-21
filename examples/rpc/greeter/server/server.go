@@ -14,7 +14,7 @@ func main() {
 	app := zoo.New(zoo.InitRpcServer(InitRpcServer))
 
 	if err := app.Run(); err != nil {
-		log.Fatal(err.Error())
+		log.Fatal(err)
 	}
 }
 
