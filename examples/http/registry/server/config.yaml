@@ -1,7 +1,7 @@
 app:
   name: "example"
 http:
-  addr: ":5180"
+  addr: ""
   mode: "debug"
 registry:
   basePath: "/zoo"

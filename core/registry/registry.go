@@ -1,10 +1,10 @@
 package registry
 
-import "context"
-
 type Registry interface {
 	Register(service *Service) error
 	Deregister(service *Service) error
+	GetService(name string) ([]*Service, error)
+	Watch(name string) Watcher
 }
 
 type Service struct {
@@ -15,12 +15,12 @@ type Service struct {
 	Metadata map[string]string
 }
 
-type Discovery interface {
-	GetService(ctx context.Context, name string) ([]*Service, error)
-	Watch(ctx context.Context, name string) (Watcher, error)
+type Watcher interface {
+	Next() (*Result, error)
+	Stop()
 }
 
-type Watcher interface {
-	Next() ([]*Service, error)
-	Stop() error
+type Result struct {
+	Action  string
+	Service *Service
 }

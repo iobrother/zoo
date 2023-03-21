@@ -4,7 +4,7 @@ import (
 	"os"
 )
 
-var defaultLogger = New(os.Stderr, InfoLevel, WithCaller(true))
+var defaultLogger = New(os.Stderr, InfoLevel, WithCaller(true), Development())
 
 var (
 	GetLogger   = defaultLogger.Logger

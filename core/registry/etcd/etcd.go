@@ -3,6 +3,7 @@ package etcd
 import (
 	"context"
 	"encoding/json"
+	"path"
 	"time"
 
 	clientv3 "go.etcd.io/etcd/client/v3"
@@ -146,4 +147,31 @@ func (e *etcdRegistry) init() error {
 	}
 	e.client = cli
 	return nil
+}
+
+func (e *etcdRegistry) GetService(name string) ([]*registry.Service, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), e.timeout)
+	defer cancel()
+
+	prefix := path.Join(e.basePath, name)
+	rsp, err := e.client.Get(ctx, prefix, clientv3.WithPrefix(), clientv3.WithSerializable())
+	if err != nil {
+		return nil, err
+	}
+
+	var services []*registry.Service
+	for _, v := range rsp.Kvs {
+		if service := decode(v.Value); service != nil {
+			if service.Name == name {
+				services = append(services, service)
+			}
+		}
+	}
+
+	return services, nil
+}
+
+func (e *etcdRegistry) Watch(service string) registry.Watcher {
+	p := path.Join(e.basePath, service)
+	return newWatcher(e.ctx, e.client, p, service)
 }

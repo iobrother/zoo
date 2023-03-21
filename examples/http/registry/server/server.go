@@ -2,13 +2,12 @@ package main
 
 import (
 	"fmt"
-
 	"github.com/iobrother/zoo"
+	"github.com/iobrother/zoo/core/errors"
 	"github.com/iobrother/zoo/core/log"
 	"github.com/iobrother/zoo/core/transport/http"
 )
 
-// curl http://127.0.0.1:5180/hello/zoo
 func main() {
 	app := zoo.New(zoo.InitHttpServer(InitHttpServer))
 
@@ -17,10 +16,28 @@ func main() {
 	}
 }
 
-func InitHttpServer(s *http.Server) error {
-	s.GetEx("/hello/:name", func(c *http.Context) {
-		c.String(200, fmt.Sprintf("hello %s!", c.Param("name")))
-	})
+type HelloRequest struct {
+	Name string `json:"name,omitempty"`
+}
 
+type HelloResponse struct {
+	Message string `json:"message,omitempty"`
+}
+
+func InitHttpServer(s *http.Server) error {
+	s.PostEx("/hello", func(c *http.Context) {
+		req := HelloRequest{}
+		if err := c.ShouldBind(&req); err != nil {
+			e := errors.FromError(err)
+			c.JSON(500, e)
+			c.Abort()
+			return
+		}
+
+		rsp := HelloResponse{
+			Message: fmt.Sprintf("hello %s!", req.Name),
+		}
+		c.JSON(200, rsp)
+	})
 	return nil
 }
