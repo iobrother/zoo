@@ -7,8 +7,8 @@ import (
 	"github.com/iobrother/zoo"
 	"github.com/iobrother/zoo/core/errors"
 	"github.com/iobrother/zoo/core/log"
-	"github.com/iobrother/zoo/core/transport/http"
-	"github.com/iobrother/zoo/core/transport/http/middleware/error_response"
+	"github.com/iobrother/zoo/core/transport/http/server"
+	"github.com/iobrother/zoo/core/transport/http/server/middleware/error_response"
 	"github.com/iobrother/zoo/core/transport/rpc/client"
 	"github.com/iobrother/zoo/examples/gen/errapi"
 )
@@ -34,7 +34,7 @@ func main() {
 	}
 }
 
-func InitHttpServer(s *http.Server) error {
+func InitHttpServer(s *server.Server) error {
 	s.Use(error_response.ErrorResponse())
 	g := s.Group("")
 	errapi.RegisterErrAPIHTTPService(g, &ErrImpl{})

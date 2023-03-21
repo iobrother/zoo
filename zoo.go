@@ -20,7 +20,7 @@ import (
 	"github.com/iobrother/zoo/core/log"
 	"github.com/iobrother/zoo/core/registry"
 	"github.com/iobrother/zoo/core/registry/etcd"
-	"github.com/iobrother/zoo/core/transport/http"
+	httpserver "github.com/iobrother/zoo/core/transport/http/server"
 	"github.com/iobrother/zoo/core/transport/rpc/server"
 	"github.com/iobrother/zoo/core/util/env"
 )
@@ -29,10 +29,10 @@ type App struct {
 	opts       Options
 	zc         *zconfig
 	rpcServer  *server.Server
-	httpServer *http.Server
+	httpServer *httpserver.Server
 }
 
-func (a *App) GetHttpServer() *http.Server {
+func (a *App) GetHttpServer() *httpserver.Server {
 	return a.httpServer
 }
 
@@ -146,14 +146,14 @@ func New(opts ...Option) *App {
 			r = etcd.NewRegistry(opts...)
 		}
 
-		app.httpServer = http.NewServer(
-			http.Name(zc.App.Name),
-			http.Addr(zc.Http.Addr),
-			http.Mode(mode),
-			http.Tracing(tracing),
-			http.Registry(r),
+		app.httpServer = httpserver.NewServer(
+			httpserver.Name(zc.App.Name),
+			httpserver.Addr(zc.Http.Addr),
+			httpserver.Mode(mode),
+			httpserver.Tracing(tracing),
+			httpserver.Registry(r),
 		)
-		app.httpServer.Init(http.InitHttpServer(app.opts.InitHttpServer))
+		app.httpServer.Init(httpserver.InitHttpServer(app.opts.InitHttpServer))
 	}
 
 	return app

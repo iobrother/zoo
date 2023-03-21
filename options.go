@@ -1,7 +1,7 @@
 package zoo
 
 import (
-	"github.com/iobrother/zoo/core/transport/http"
+	server2 "github.com/iobrother/zoo/core/transport/http/server"
 	"github.com/iobrother/zoo/core/transport/rpc/server"
 )
 
@@ -9,7 +9,7 @@ type BeforeFunc func() error
 
 type Options struct {
 	InitRpcServer  server.InitRpcServerFunc
-	InitHttpServer http.InitHttpServerFunc
+	InitHttpServer server2.InitHttpServerFunc
 	Before         BeforeFunc
 }
 
@@ -31,7 +31,7 @@ func InitRpcServer(f server.InitRpcServerFunc) Option {
 	}
 }
 
-func InitHttpServer(f http.InitHttpServerFunc) Option {
+func InitHttpServer(f server2.InitHttpServerFunc) Option {
 	return func(o *Options) {
 		o.InitHttpServer = f
 	}

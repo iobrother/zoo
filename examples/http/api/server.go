@@ -6,8 +6,8 @@ import (
 
 	"github.com/iobrother/zoo"
 	"github.com/iobrother/zoo/core/log"
-	"github.com/iobrother/zoo/core/transport/http"
-	"github.com/iobrother/zoo/core/transport/http/middleware/error_response"
+	"github.com/iobrother/zoo/core/transport/http/server"
+	"github.com/iobrother/zoo/core/transport/http/server/middleware/error_response"
 	"github.com/iobrother/zoo/examples/gen/greeter"
 )
 
@@ -20,7 +20,7 @@ func main() {
 	}
 }
 
-func InitHttpServer(s *http.Server) error {
+func InitHttpServer(s *server.Server) error {
 	s.Use(error_response.ErrorResponse())
 	g := s.Group("")
 	greeter.RegisterGreeterHTTPService(g, &GreeterImpl{})

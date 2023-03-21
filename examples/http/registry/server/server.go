@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
+	
 	"github.com/iobrother/zoo"
 	"github.com/iobrother/zoo/core/errors"
 	"github.com/iobrother/zoo/core/log"
-	"github.com/iobrother/zoo/core/transport/http"
+	"github.com/iobrother/zoo/core/transport/http/server"
 )
 
 func main() {
@@ -24,8 +25,8 @@ type HelloResponse struct {
 	Message string `json:"message,omitempty"`
 }
 
-func InitHttpServer(s *http.Server) error {
-	s.PostEx("/hello", func(c *http.Context) {
+func InitHttpServer(s *server.Server) error {
+	s.PostEx("/hello", func(c *server.Context) {
 		req := HelloRequest{}
 		if err := c.ShouldBind(&req); err != nil {
 			e := errors.FromError(err)

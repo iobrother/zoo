@@ -3,11 +3,11 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/iobrother/zoo/core/transport/http/middleware/error_response"
 
 	"github.com/iobrother/zoo"
 	"github.com/iobrother/zoo/core/log"
-	"github.com/iobrother/zoo/core/transport/http"
+	httpserver "github.com/iobrother/zoo/core/transport/http/server"
+	"github.com/iobrother/zoo/core/transport/http/server/middleware/error_response"
 	"github.com/iobrother/zoo/examples/gen/greeter"
 	"github.com/smallnest/rpcx/server"
 )
@@ -40,7 +40,7 @@ func (s *GreeterImpl) SayHello(ctx context.Context, req *greeter.HelloRequest, r
 	return nil
 }
 
-func InitHttpServer(s *http.Server) error {
+func InitHttpServer(s *httpserver.Server) error {
 	s.Use(error_response.ErrorResponse())
 	g := s.Group("")
 	greeter.RegisterGreeterHTTPService(g, &HttpGreeter{})

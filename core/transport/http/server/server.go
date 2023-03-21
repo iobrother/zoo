@@ -1,4 +1,4 @@
-package http
+package server
 
 import (
 	"context"
@@ -12,8 +12,8 @@ import (
 
 	"github.com/iobrother/zoo/core/log"
 	"github.com/iobrother/zoo/core/registry"
-	"github.com/iobrother/zoo/core/transport/http/middleware/logging"
-	"github.com/iobrother/zoo/core/transport/http/middleware/tracing"
+	"github.com/iobrother/zoo/core/transport/http/server/middleware/logging"
+	"github.com/iobrother/zoo/core/transport/http/server/middleware/tracing"
 	"github.com/iobrother/zoo/core/util/addr"
 	znet "github.com/iobrother/zoo/core/util/net"
 )

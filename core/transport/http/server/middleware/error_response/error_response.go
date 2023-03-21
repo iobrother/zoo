@@ -3,7 +3,7 @@ package error_response
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/iobrother/zoo/core/errors"
-	"github.com/iobrother/zoo/core/transport/http"
+	"github.com/iobrother/zoo/core/transport/http/server"
 )
 
 //func ErrorResponse() http.HandlerFunc {
@@ -25,7 +25,7 @@ import (
 func ErrorResponse() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		defer func() {
-			c := http.Context{Context: ctx}
+			c := server.Context{Context: ctx}
 			err := c.GetError()
 			if err != nil {
 				e := errors.FromError(err)
