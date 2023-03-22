@@ -19,7 +19,7 @@ const deprecationComment = "// Deprecated: Do not use."
 var (
 	contextPackage = protogen.GoImportPath("context")
 	ginPackage     = protogen.GoImportPath("github.com/gin-gonic/gin")
-	netHttpPackage = protogen.GoImportPath("github.com/iobrother/zoo/core/transport/http")
+	serverPackage  = protogen.GoImportPath("github.com/iobrother/zoo/core/transport/http/server")
 )
 
 var methodSets = make(map[string]int)
@@ -66,7 +66,7 @@ func generateImports(g *protogen.GeneratedFile) {
 	g.P("// Reference imports to suppress errors if they are not otherwise used.")
 	g.P("var _ = ", contextPackage.Ident("TODO"))
 	g.P("var _ = ", ginPackage.Ident("New"))
-	g.P("var _ = ", netHttpPackage.Ident("NewServer"))
+	g.P("var _ = ", serverPackage.Ident("NewServer"))
 	g.P()
 }
 

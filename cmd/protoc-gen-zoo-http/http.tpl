@@ -17,7 +17,7 @@ func Register{{$svcType}}HTTPService(g *gin.RouterGroup, svc {{$svcType}}HTTPSer
 {{range .Methods}}
 func _{{$svcType}}_{{.Name}}{{.Num}}_HTTP_Handler(svc {{$svcType}}HTTPService) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-        c := &http.Context{Context: ctx}
+        c := &server.Context{Context: ctx}
 		shouldBind := func(req *{{.Request}}) error {
 			{{- if .HasBody}}
 			if err := c.ShouldBind(req{{.Body}}); err != nil {

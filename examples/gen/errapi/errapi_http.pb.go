@@ -9,7 +9,7 @@ package errapi
 import (
 	context "context"
 	gin "github.com/gin-gonic/gin"
-	"github.com/iobrother/zoo/core/transport/http/server"
+	server "github.com/iobrother/zoo/core/transport/http/server"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
