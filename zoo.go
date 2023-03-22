@@ -185,11 +185,12 @@ func setTracerProvider(endpoint string, name string) *trace.TracerProvider {
 }
 
 func (a *App) Run() error {
-	if a.opts.Before != nil {
-		if err := a.opts.Before(); err != nil {
+	for _, f := range a.opts.BeforeStart {
+		if err := f(); err != nil {
 			return err
 		}
 	}
+
 	if a.rpcServer != nil {
 		if err := a.rpcServer.Start(); err != nil {
 			return err
@@ -202,9 +203,21 @@ func (a *App) Run() error {
 		}
 	}
 
+	for _, f := range a.opts.AfterStart {
+		if err := f(); err != nil {
+			return err
+		}
+	}
+
 	ch := make(chan os.Signal, 1)
 	signal.Notify(ch, syscall.SIGTERM, syscall.SIGINT, syscall.SIGQUIT)
 	log.Infof("received signal %s", <-ch)
+
+	for _, f := range a.opts.BeforeStop {
+		if err := f(); err != nil {
+			return err
+		}
+	}
 
 	if a.rpcServer != nil {
 		_ = a.rpcServer.Stop()
@@ -212,6 +225,12 @@ func (a *App) Run() error {
 
 	if a.httpServer != nil {
 		_ = a.httpServer.Stop()
+	}
+
+	for _, f := range a.opts.AfterStop {
+		if err := f(); err != nil {
+			return err
+		}
 	}
 
 	return nil

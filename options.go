@@ -1,16 +1,17 @@
 package zoo
 
 import (
-	server2 "github.com/iobrother/zoo/core/transport/http/server"
+	httpserver "github.com/iobrother/zoo/core/transport/http/server"
 	"github.com/iobrother/zoo/core/transport/rpc/server"
 )
 
-type BeforeFunc func() error
-
 type Options struct {
 	InitRpcServer  server.InitRpcServerFunc
-	InitHttpServer server2.InitHttpServerFunc
-	Before         BeforeFunc
+	InitHttpServer httpserver.InitHttpServerFunc
+	BeforeStart    []func() error
+	AfterStart     []func() error
+	BeforeStop     []func() error
+	AfterStop      []func() error
 }
 
 type Option func(*Options)
@@ -31,14 +32,32 @@ func InitRpcServer(f server.InitRpcServerFunc) Option {
 	}
 }
 
-func InitHttpServer(f server2.InitHttpServerFunc) Option {
+func InitHttpServer(f httpserver.InitHttpServerFunc) Option {
 	return func(o *Options) {
 		o.InitHttpServer = f
 	}
 }
 
-func Before(f BeforeFunc) Option {
+func BeforeStart(f func() error) Option {
 	return func(o *Options) {
-		o.Before = f
+		o.BeforeStart = append(o.BeforeStart, f)
+	}
+}
+
+func AfterStart(f func() error) Option {
+	return func(o *Options) {
+		o.AfterStart = append(o.AfterStart, f)
+	}
+}
+
+func BeforeStop(f func() error) Option {
+	return func(o *Options) {
+		o.BeforeStop = append(o.BeforeStop, f)
+	}
+}
+
+func AfterStop(f func() error) Option {
+	return func(o *Options) {
+		o.AfterStop = append(o.AfterStop, f)
 	}
 }
