@@ -119,7 +119,7 @@ func New(opts ...Option) *App {
 		tracing = true
 	}
 
-	if config.Get("rpc") != nil {
+	if app.opts.InitRpcServer != nil {
 		app.rpcServer = server.NewServer(
 			server.Name(zc.App.Name),
 			server.Addr(zc.Rpc.Addr),
@@ -127,15 +127,15 @@ func New(opts ...Option) *App {
 			server.UpdateInterval(zc.Registry.UpdateInterval),
 			server.EtcdAddr(zc.Registry.EtcdAddr),
 			server.Tracing(tracing),
+			server.InitRpcServer(app.opts.InitRpcServer),
 		)
-		app.rpcServer.Init(server.InitRpcServer(app.opts.InitRpcServer))
 	}
 	mode := "debug"
 	if env.IsProduct() || env.IsStaging() {
 		mode = "release"
 	}
 
-	if config.Get("http") != nil {
+	if app.opts.InitHttpServer != nil {
 		var r registry.Registry
 		var opts []etcd.Option
 		if zc.Registry.BasePath != "" {
@@ -152,8 +152,8 @@ func New(opts ...Option) *App {
 			httpserver.Mode(mode),
 			httpserver.Tracing(tracing),
 			httpserver.Registry(r),
+			httpserver.InitHttpServer(app.opts.InitHttpServer),
 		)
-		app.httpServer.Init(httpserver.InitHttpServer(app.opts.InitHttpServer))
 	}
 
 	return app

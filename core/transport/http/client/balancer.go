@@ -2,8 +2,10 @@ package client
 
 import (
 	"errors"
-	"strconv"
+	"sync"
 )
+
+const defaultWeight = 1
 
 type Balancer interface {
 	Select() (*Address, error)
@@ -18,6 +20,7 @@ type Peer struct {
 }
 
 type Wrr struct {
+	mu    sync.Mutex
 	peers []*Peer
 	Next  int
 }
@@ -25,6 +28,7 @@ type Wrr struct {
 func (w *Wrr) Select() (*Address, error) {
 	total := 0
 	var best *Peer
+	w.mu.Lock()
 	for _, peer := range w.peers {
 		peer.currentWeight += peer.effectiveWeight
 		total += peer.effectiveWeight
@@ -41,6 +45,7 @@ func (w *Wrr) Select() (*Address, error) {
 	if best != nil {
 		best.currentWeight -= total
 	}
+	w.mu.Unlock()
 
 	if best == nil {
 		return nil, errors.New("service unavailable: produced zero addresses")
@@ -52,9 +57,9 @@ func (w *Wrr) Select() (*Address, error) {
 func (w *Wrr) Update(addresses []*Address) {
 	peers := make([]*Peer, 0, len(addresses))
 	for _, v := range addresses {
-		weight, _ := strconv.Atoi(v.Metadata["weight"])
+		weight := v.Weight
 		if weight == 0 {
-			weight = 1
+			weight = defaultWeight
 		}
 		peer := &Peer{
 			weight:          weight,
@@ -64,7 +69,10 @@ func (w *Wrr) Update(addresses []*Address) {
 		}
 		peers = append(peers, peer)
 	}
+
+	w.mu.Lock()
 	w.peers = peers
+	w.mu.Unlock()
 }
 
 type RR struct {

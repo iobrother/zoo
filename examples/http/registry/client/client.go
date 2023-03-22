@@ -24,13 +24,15 @@ func main() {
 		client.Registry(r),
 	)
 
-	req := HelloRequest{Name: "zoo"}
-	rsp := HelloResponse{}
+	for i := 0; i < 5; i++ {
+		req := HelloRequest{Name: "zoo"}
+		rsp := HelloResponse{}
 
-	if err := cli.Invoke(context.Background(), "POST", "/hello", &req, &rsp); err != nil {
-		log.Error(err)
-		return
+		if err := cli.Invoke(context.Background(), "POST", "/hello", &req, &rsp); err != nil {
+			log.Error(err)
+			return
+		}
+
+		log.Info(rsp)
 	}
-
-	log.Info(rsp.Message)
 }

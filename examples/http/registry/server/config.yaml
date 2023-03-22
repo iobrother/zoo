@@ -1,8 +1,8 @@
 app:
   name: "example"
-http:
-  addr: ""
-  mode: "debug"
+#http:
+#  addr: ""
+#  mode: "debug"
 registry:
   basePath: "/zoo"
   updateInterval: 30

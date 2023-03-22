@@ -24,6 +24,7 @@ type Resolver struct {
 
 type Address struct {
 	Addr     string
+	Weight   int
 	Metadata map[string]string
 }
 
@@ -80,8 +81,11 @@ func (r *Resolver) update() {
 	services, _ := r.r.GetService(r.target.Endpoint)
 	for _, service := range services {
 		if service.Scheme == "http" {
-			addr := &Address{Addr: service.Address}
-			addr.Metadata = service.Metadata
+			addr := &Address{
+				Addr:     service.Address,
+				Weight:   service.Weight,
+				Metadata: service.Metadata,
+			}
 			addrs = append(addrs, addr)
 		}
 	}
