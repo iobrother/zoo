@@ -93,22 +93,29 @@ func generateFileContent(file *protogen.File, g *protogen.GeneratedFile) {
 }
 
 func genErrorsDetail(g *protogen.GeneratedFile, enum *protogen.Enum) bool {
-	defaultCode := proto.GetExtension(enum.Desc.Options(), errdesc.E_DefaultCode)
-	code := 0
-	if ok := defaultCode.(int32); ok != 0 {
-		code = int(ok)
+	defaultStatusCode := proto.GetExtension(enum.Desc.Options(), errdesc.E_DefaultStatusCode)
+	statusCode := 500
+	if ok := defaultStatusCode.(int32); ok != 0 {
+		statusCode = int(ok)
 	}
 	var ew errorWrapper
 	for _, v := range enum.Values {
-		enumCode := code
-		eCode := proto.GetExtension(v.Desc.Options(), errdesc.E_Code)
-		if vv, ok := eCode.(int32); ok && vv != 0 {
-			enumCode = int(vv)
+		code := 0
+		msg := ""
+		eStatusCode := proto.GetExtension(v.Desc.Options(), errdesc.E_StatusCode)
+		if vv, ok := eStatusCode.(int32); ok && vv != 0 {
+			statusCode = int(vv)
 		}
-		if enumCode == 0 {
+		if statusCode == 0 {
 			continue
 		}
-		msg := ""
+		eCode := proto.GetExtension(v.Desc.Options(), errdesc.E_Code)
+		if vv, ok := eCode.(int32); ok && vv != 0 {
+			code = int(vv)
+		}
+		if code == 0 {
+			continue
+		}
 		eMsg := proto.GetExtension(v.Desc.Options(), errdesc.E_Msg)
 		if vv, ok := eMsg.(string); ok {
 			msg = vv
@@ -116,7 +123,8 @@ func genErrorsDetail(g *protogen.GeneratedFile, enum *protogen.Enum) bool {
 
 		err := &errorInfo{
 			Name:       string(enum.Desc.Name()),
-			Code:       enumCode,
+			StatusCode: statusCode,
+			Code:       code,
 			Value:      string(v.Desc.Name()),
 			CamelValue: camelCase(string(v.Desc.Name())),
 			Message:    msg,

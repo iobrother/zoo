@@ -7,19 +7,52 @@ import (
 	"io"
 )
 
+const (
+	defaultStatusCode = 500
+	defaultErrorCode  = 500
+)
+
 type Error struct {
-	Code     int32             `json:"code,omitempty"`
-	Message  string            `json:"message,omitempty"`
-	Detail   string            `json:"detail,omitempty"`
-	Metadata map[string]string `json:"metadata,omitempty"`
+	StatusCode int32             `json:"status_code,omitempty"`
+	Code       int32             `json:"code,omitempty"`
+	Message    string            `json:"message,omitempty"`
+	Detail     string            `json:"detail,omitempty"`
+	Metadata   map[string]string `json:"metadata,omitempty"`
+}
+
+func NewWithStatusCode(statusCode, code int32, message, detail string) *Error {
+	e := &Error{
+		StatusCode: statusCode,
+		Code:       code,
+		Message:    message,
+		Detail:     detail,
+		Metadata:   map[string]string{},
+	}
+
+	e.Metadata["_zoo_error_stack"] = stacktrace()
+	return e
+}
+
+func NewfWithStatusCode(statusCode, code int32, message, format string, a ...any) *Error {
+	e := &Error{
+		StatusCode: statusCode,
+		Code:       code,
+		Message:    message,
+		Detail:     fmt.Sprintf(format, a...),
+		Metadata:   map[string]string{},
+	}
+
+	e.Metadata["_zoo_error_stack"] = stacktrace()
+	return e
 }
 
 func New(code int32, message, detail string) *Error {
 	e := &Error{
-		Code:     code,
-		Message:  message,
-		Detail:   detail,
-		Metadata: map[string]string{},
+		StatusCode: defaultStatusCode,
+		Code:       code,
+		Message:    message,
+		Detail:     detail,
+		Metadata:   map[string]string{},
 	}
 
 	e.Metadata["_zoo_error_stack"] = stacktrace()
@@ -28,10 +61,11 @@ func New(code int32, message, detail string) *Error {
 
 func Newf(code int32, message, format string, a ...any) *Error {
 	e := &Error{
-		Code:     code,
-		Message:  message,
-		Detail:   fmt.Sprintf(format, a...),
-		Metadata: map[string]string{},
+		StatusCode: defaultStatusCode,
+		Code:       code,
+		Message:    message,
+		Detail:     fmt.Sprintf(format, a...),
+		Metadata:   map[string]string{},
 	}
 
 	e.Metadata["_zoo_error_stack"] = stacktrace()
@@ -40,10 +74,24 @@ func Newf(code int32, message, format string, a ...any) *Error {
 
 func Errorf(code int32, message, format string, a ...any) error {
 	e := &Error{
-		Code:     code,
-		Message:  message,
-		Detail:   fmt.Sprintf(format, a...),
-		Metadata: map[string]string{},
+		StatusCode: defaultStatusCode,
+		Code:       code,
+		Message:    message,
+		Detail:     fmt.Sprintf(format, a...),
+		Metadata:   map[string]string{},
+	}
+
+	e.Metadata["_zoo_error_stack"] = stacktrace()
+	return e
+}
+
+func ErrorfWithStatusCode(statusCode, code int32, message, format string, a ...any) error {
+	e := &Error{
+		StatusCode: statusCode,
+		Code:       code,
+		Message:    message,
+		Detail:     fmt.Sprintf(format, a...),
+		Metadata:   map[string]string{},
 	}
 
 	e.Metadata["_zoo_error_stack"] = stacktrace()
@@ -54,12 +102,14 @@ func Parse(err string) *Error {
 	e := new(Error)
 	errr := json.Unmarshal([]byte(err), e)
 	if errr != nil {
-		e.Code = 500
+		e.StatusCode = defaultStatusCode
+		e.Code = defaultErrorCode
 		e.Message = "Internal Server Error"
 		e.Detail = err
 	}
 	if e.Code == 0 {
-		e.Code = 500
+		e.StatusCode = defaultStatusCode
+		e.Code = defaultErrorCode
 	}
 	return e
 }
@@ -86,10 +136,11 @@ func (e *Error) clone() *Error {
 		metadata[k] = v
 	}
 	return &Error{
-		Code:     e.Code,
-		Message:  e.Message,
-		Detail:   e.Detail,
-		Metadata: metadata,
+		StatusCode: e.StatusCode,
+		Code:       e.Code,
+		Message:    e.Message,
+		Detail:     e.Detail,
+		Metadata:   metadata,
 	}
 }
 
@@ -100,7 +151,7 @@ func (e *Error) Error() string {
 
 func Code(err error) int {
 	if err == nil {
-		return 200
+		return 0
 	}
 	return int(FromError(err).Code)
 }

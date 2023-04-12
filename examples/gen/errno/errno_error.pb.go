@@ -53,24 +53,6 @@ func _apply(e *errors.Error, opts ...Option) {
 	}
 }
 
-func IsInternalServerError(err error) bool {
-	e := errors.FromError(err)
-	return e.Code == 500
-}
-
-func ErrInternalServerError(detail string) *errors.Error {
-	return errors.New(500, "服务器错误", detail)
-}
-
-func ErrInternalServerErrorf(format string, a ...any) *errors.Error {
-	return errors.New(500, "服务器错误", fmt.Sprintf(format, a...))
-}
-
-func ErrInternalServerErrorw(opt ...Option) *errors.Error {
-	e := errors.New(500, "服务器错误", ErrorReason_INTERNAL_SERVER_ERROR.String())
-	_apply(e, opt...)
-	return e
-}
 func IsDbError(err error) bool {
 	e := errors.FromError(err)
 	return e.Code == 100101
@@ -88,7 +70,7 @@ func ErrDbErrorf(format string, a ...any) *errors.Error {
 }
 
 func ErrDbErrorw(opt ...Option) *errors.Error {
-	e := errors.New(100101, "数据库错误", ErrorReason_DB_ERROR.String())
+	e := errors.NewWithStatusCode(500, 100101, "数据库错误", ErrorReason_DB_ERROR.String())
 	_apply(e, opt...)
 	return e
 }
@@ -109,7 +91,7 @@ func ErrOrderNotExistf(format string, a ...any) *errors.Error {
 }
 
 func ErrOrderNotExistw(opt ...Option) *errors.Error {
-	e := errors.New(100201, "订单不存在", ErrorReason_ORDER_NOT_EXIST.String())
+	e := errors.NewWithStatusCode(500, 100201, "订单不存在", ErrorReason_ORDER_NOT_EXIST.String())
 	_apply(e, opt...)
 	return e
 }

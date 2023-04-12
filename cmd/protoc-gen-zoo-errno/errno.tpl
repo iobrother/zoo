@@ -42,27 +42,19 @@ func Is{{.CamelValue}}(err error) bool {
 	return e.Code == {{.Code}}
 }
 
-func Err{{.CamelValue}}({{if or (eq .Code 400) (eq .Code 500)}}detail string{{else}}message ...string{{end}}) *errors.Error {
-{{- if or (eq .Code 400) (eq .Code 500)}}
-	return errors.New({{.Code}}, "{{.Message}}", detail)
-{{- else}}
+func Err{{.CamelValue}}(message ...string) *errors.Error {
 	if len(message) > 0 {
 	   return Err{{.CamelValue}}w(WithMessage(message[0]))
 	}
     return Err{{.CamelValue}}w()
-{{- end}}
 }
 
 func Err{{.CamelValue}}f(format string, a ...any) *errors.Error {
-{{- if or (eq .Code 400) (eq .Code 500)}}
-	 return errors.New({{.Code}}, "{{.Message}}", fmt.Sprintf(format, a...))
-{{- else}}
 	 return Err{{.CamelValue}}w(WithMessage(fmt.Sprintf(format, a...)))
-{{- end}}
 }
 
 func Err{{.CamelValue}}w(opt ...Option) *errors.Error {
-    e := errors.New({{.Code}}, "{{.Message}}", {{.Name}}_{{.Value}}.String())
+    e := errors.NewWithStatusCode({{.StatusCode}}, {{.Code}}, "{{.Message}}", {{.Name}}_{{.Value}}.String())
 	_apply(e, opt...)
 	return e
 }

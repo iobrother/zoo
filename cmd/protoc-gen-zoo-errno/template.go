@@ -14,6 +14,7 @@ var errnoTemplate = template.Must(template.New("components").ParseFS(Static, "er
 
 type errorInfo struct {
 	Name       string
+	StatusCode int
 	Code       int
 	Value      string
 	CamelValue string
