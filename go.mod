@@ -11,7 +11,7 @@ require (
 	github.com/rpcxio/rpcx-plugins v0.0.0-20220730073026-120f5ed14272
 	github.com/smallnest/rpcx v1.8.6
 	github.com/spf13/viper v1.15.0
-	go.etcd.io/etcd/client/v3 v3.5.7
+	go.etcd.io/etcd/client/v3 v3.5.8
 	go.opentelemetry.io/otel v1.14.0
 	go.opentelemetry.io/otel/exporters/jaeger v1.14.0
 	go.opentelemetry.io/otel/sdk v1.14.0
@@ -98,8 +98,8 @@ require (
 	github.com/vmihailenco/msgpack/v5 v5.3.5 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	github.com/xtaci/kcp-go v5.4.20+incompatible // indirect
-	go.etcd.io/etcd/api/v3 v3.5.7 // indirect
-	go.etcd.io/etcd/client/pkg/v3 v3.5.7 // indirect
+	go.etcd.io/etcd/api/v3 v3.5.8 // indirect
+	go.etcd.io/etcd/client/pkg/v3 v3.5.8 // indirect
 	go.etcd.io/etcd/client/v2 v2.305.6 // indirect
 	go.uber.org/atomic v1.10.0 // indirect
 	go.uber.org/multierr v1.8.0 // indirect
