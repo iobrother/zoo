@@ -10,43 +10,19 @@ import (
 	context "context"
 	client "github.com/smallnest/rpcx/client"
 	protocol "github.com/smallnest/rpcx/protocol"
-	server "github.com/smallnest/rpcx/server"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = context.TODO
-var _ = server.NewServer
 var _ = client.NewClient
 var _ = protocol.NewMessage
 
-//================== interface skeleton ===================
+// ================== interface skeleton ===================
 type GreeterAble interface {
 	// GreeterAble can be used for interface verification.
 
 	// SayHello is server rpc method as defined
 	SayHello(ctx context.Context, args *HelloRequest, reply *HelloReply) (err error)
-}
-
-//================== server skeleton ===================
-type GreeterImpl struct{}
-
-// ServeForGreeter starts a server only registers one service.
-// You can register more services and only start one server.
-// It blocks until the application exits.
-func ServeForGreeter(addr string) error {
-	s := server.NewServer()
-	s.RegisterName("Greeter", new(GreeterImpl), "")
-	return s.Serve("tcp", addr)
-}
-
-// SayHello is server rpc method as defined
-func (s *GreeterImpl) SayHello(ctx context.Context, args *HelloRequest, reply *HelloReply) (err error) {
-	// TODO: add business logics
-
-	// TODO: setting return values
-	*reply = HelloReply{}
-
-	return nil
 }
 
 //================== client stub ===================

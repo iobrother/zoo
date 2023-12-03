@@ -56,7 +56,11 @@ func _ErrAPI_SayHello0_HTTP_Handler(svc ErrAPIHTTPService) gin.HandlerFunc {
 			c.SetError(err)
 			return
 		}
-		c.JSON(200, rsp)
+		if c.ContentType() == "application/x-protobuf" {
+			c.ProtoBuf(200, rsp)
+		} else {
+			c.JSON(200, rsp)
+		}
 	}
 }
 func _ErrAPI_TestError0_HTTP_Handler(svc ErrAPIHTTPService) gin.HandlerFunc {
@@ -85,6 +89,10 @@ func _ErrAPI_TestError0_HTTP_Handler(svc ErrAPIHTTPService) gin.HandlerFunc {
 			c.SetError(err)
 			return
 		}
-		c.JSON(200, rsp)
+		if c.ContentType() == "application/x-protobuf" {
+			c.ProtoBuf(200, rsp)
+		} else {
+			c.JSON(200, rsp)
+		}
 	}
 }

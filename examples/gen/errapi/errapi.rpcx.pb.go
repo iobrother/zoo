@@ -10,16 +10,14 @@ import (
 	context "context"
 	client "github.com/smallnest/rpcx/client"
 	protocol "github.com/smallnest/rpcx/protocol"
-	server "github.com/smallnest/rpcx/server"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
 var _ = context.TODO
-var _ = server.NewServer
 var _ = client.NewClient
 var _ = protocol.NewMessage
 
-//================== interface skeleton ===================
+// ================== interface skeleton ===================
 type ErrAPIAble interface {
 	// ErrAPIAble can be used for interface verification.
 
@@ -28,38 +26,6 @@ type ErrAPIAble interface {
 
 	// TestError is server rpc method as defined
 	TestError(ctx context.Context, args *ErrorRequest, reply *ErrorReply) (err error)
-}
-
-//================== server skeleton ===================
-type ErrAPIImpl struct{}
-
-// ServeForErrAPI starts a server only registers one service.
-// You can register more services and only start one server.
-// It blocks until the application exits.
-func ServeForErrAPI(addr string) error {
-	s := server.NewServer()
-	s.RegisterName("ErrAPI", new(ErrAPIImpl), "")
-	return s.Serve("tcp", addr)
-}
-
-// SayHello is server rpc method as defined
-func (s *ErrAPIImpl) SayHello(ctx context.Context, args *HelloRequest, reply *HelloReply) (err error) {
-	// TODO: add business logics
-
-	// TODO: setting return values
-	*reply = HelloReply{}
-
-	return nil
-}
-
-// TestError is server rpc method as defined
-func (s *ErrAPIImpl) TestError(ctx context.Context, args *ErrorRequest, reply *ErrorReply) (err error) {
-	// TODO: add business logics
-
-	// TODO: setting return values
-	*reply = ErrorReply{}
-
-	return nil
 }
 
 //================== client stub ===================

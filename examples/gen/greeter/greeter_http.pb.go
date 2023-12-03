@@ -53,6 +53,10 @@ func _Greeter_SayHello0_HTTP_Handler(svc GreeterHTTPService) gin.HandlerFunc {
 			c.SetError(err)
 			return
 		}
-		c.JSON(200, rsp)
+		if c.ContentType() == "application/x-protobuf" {
+			c.ProtoBuf(200, rsp)
+		} else {
+			c.JSON(200, rsp)
+		}
 	}
 }

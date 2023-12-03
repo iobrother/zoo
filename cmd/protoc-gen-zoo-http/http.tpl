@@ -56,7 +56,11 @@ func _{{$svcType}}_{{.Name}}{{.Num}}_HTTP_Handler(svc {{$svcType}}HTTPService) g
 		    c.SetError(err)
 			return
 		}
-        c.JSON(200, rsp{{.ResponseBody}})
+		if c.ContentType() == "application/x-protobuf" {
+			c.ProtoBuf(200, rsp{{.ResponseBody}})
+		} else {
+			c.JSON(200, rsp{{.ResponseBody}})
+		}
 	}
 }
 {{- end}}
