@@ -68,7 +68,6 @@ func (c *Context) ShouldBindUri(v any) error {
 	}
 
 	return nil
-
 }
 
 func (c *Context) ShouldBindQuery(v any) error {

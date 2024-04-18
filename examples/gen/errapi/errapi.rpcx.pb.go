@@ -28,7 +28,7 @@ type ErrAPIAble interface {
 	TestError(ctx context.Context, args *ErrorRequest, reply *ErrorReply) (err error)
 }
 
-//================== client stub ===================
+// ================== client stub ===================
 // ErrAPI is a client wrapped XClient.
 type ErrAPIClient struct {
 	xclient client.XClient
@@ -70,7 +70,7 @@ func (c *ErrAPIClient) TestError(ctx context.Context, args *ErrorRequest) (reply
 	return reply, err
 }
 
-//================== oneclient stub ===================
+// ================== oneclient stub ===================
 // ErrAPIOneClient is a client wrapped oneClient.
 type ErrAPIOneClient struct {
 	serviceName string

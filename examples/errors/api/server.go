@@ -42,8 +42,7 @@ func InitHttpServer(s *server.Server) error {
 	return nil
 }
 
-type ErrImpl struct {
-}
+type ErrImpl struct{}
 
 var _ errapi.ErrAPIHTTPService = &ErrImpl{}
 
@@ -80,5 +79,4 @@ func (s *ErrImpl) TestError(ctx context.Context, req *errapi.ErrorRequest) (*err
 		Message: reply.Message,
 	}
 	return rsp, nil
-
 }

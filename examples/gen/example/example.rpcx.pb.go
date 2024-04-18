@@ -28,7 +28,7 @@ type ExampleAble interface {
 	Sms(ctx context.Context, args *SmsReq, reply *SmsRsp) (err error)
 }
 
-//================== client stub ===================
+// ================== client stub ===================
 // Example is a client wrapped XClient.
 type ExampleClient struct {
 	xclient client.XClient
@@ -70,7 +70,7 @@ func (c *ExampleClient) Sms(ctx context.Context, args *SmsReq) (reply *SmsRsp, e
 	return reply, err
 }
 
-//================== oneclient stub ===================
+// ================== oneclient stub ===================
 // ExampleOneClient is a client wrapped oneClient.
 type ExampleOneClient struct {
 	serviceName string

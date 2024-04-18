@@ -4,12 +4,12 @@
 package router
 
 import (
+	"zcash-go/gen/docs"
+
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/swag"
-
-	"zcash-go/gen/docs"
 )
 
 func Swagger(r gin.IRouter) {

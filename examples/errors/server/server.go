@@ -26,8 +26,7 @@ func InitRpcServer(s *server.Server) error {
 	return nil
 }
 
-type ErrImpl struct {
-}
+type ErrImpl struct{}
 
 var _ errapi.ErrAPIAble = &ErrImpl{}
 

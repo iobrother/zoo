@@ -48,8 +48,7 @@ func InitHttpServer(s *httpserver.Server) error {
 	return nil
 }
 
-type HttpGreeter struct {
-}
+type HttpGreeter struct{}
 
 func (s *HttpGreeter) SayHello(ctx context.Context, req *greeter.HelloRequest) (*greeter.HelloReply, error) {
 	rsp := &greeter.HelloReply{

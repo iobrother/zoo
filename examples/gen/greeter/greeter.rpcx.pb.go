@@ -25,7 +25,7 @@ type GreeterAble interface {
 	SayHello(ctx context.Context, args *HelloRequest, reply *HelloReply) (err error)
 }
 
-//================== client stub ===================
+// ================== client stub ===================
 // Greeter is a client wrapped XClient.
 type GreeterClient struct {
 	xclient client.XClient
@@ -60,7 +60,7 @@ func (c *GreeterClient) SayHello(ctx context.Context, args *HelloRequest) (reply
 	return reply, err
 }
 
-//================== oneclient stub ===================
+// ================== oneclient stub ===================
 // GreeterOneClient is a client wrapped oneClient.
 type GreeterOneClient struct {
 	serviceName string
