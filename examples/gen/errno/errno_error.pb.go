@@ -53,6 +53,27 @@ func _apply(e *errors.Error, opts ...Option) {
 	}
 }
 
+func IsInternalError(err error) bool {
+	e := errors.FromError(err)
+	return e.Code == 500
+}
+
+func ErrInternalError(message ...string) *errors.Error {
+	if len(message) > 0 {
+		return ErrInternalErrorw(WithMessage(message[0]))
+	}
+	return ErrInternalErrorw()
+}
+
+func ErrInternalErrorf(format string, a ...any) *errors.Error {
+	return ErrInternalErrorw(WithMessage(fmt.Sprintf(format, a...)))
+}
+
+func ErrInternalErrorw(opt ...Option) *errors.Error {
+	e := errors.NewWithStatusCode(500, 500, "服务器内部错误", ErrorReason_INTERNAL_ERROR.String())
+	_apply(e, opt...)
+	return e
+}
 func IsDbError(err error) bool {
 	e := errors.FromError(err)
 	return e.Code == 100101
@@ -92,6 +113,27 @@ func ErrOrderNotExistf(format string, a ...any) *errors.Error {
 
 func ErrOrderNotExistw(opt ...Option) *errors.Error {
 	e := errors.NewWithStatusCode(500, 100201, "订单不存在", ErrorReason_ORDER_NOT_EXIST.String())
+	_apply(e, opt...)
+	return e
+}
+func IsUserOrPasswordIncorrect(err error) bool {
+	e := errors.FromError(err)
+	return e.Code == 100301
+}
+
+func ErrUserOrPasswordIncorrect(message ...string) *errors.Error {
+	if len(message) > 0 {
+		return ErrUserOrPasswordIncorrectw(WithMessage(message[0]))
+	}
+	return ErrUserOrPasswordIncorrectw()
+}
+
+func ErrUserOrPasswordIncorrectf(format string, a ...any) *errors.Error {
+	return ErrUserOrPasswordIncorrectw(WithMessage(fmt.Sprintf(format, a...)))
+}
+
+func ErrUserOrPasswordIncorrectw(opt ...Option) *errors.Error {
+	e := errors.NewWithStatusCode(500, 100301, "用户名或密码错误", ErrorReason_USER_OR_PASSWORD_INCORRECT.String())
 	_apply(e, opt...)
 	return e
 }

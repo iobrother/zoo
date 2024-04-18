@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package proto.example;
+
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+
+service Example {
+  rpc Login(LoginReq) returns (LoginRsp) {
+    option (google.api.http) = {
+      post: "/example/login",
+      body: "*"
+    };
+  }
+  rpc Sms(SmsReq) returns (SmsRsp) {
+    option (google.api.http) = {
+      post: "/example/sms",
+      body: "*"
+    };
+  }
+}
+
+message LoginReq {
+  // @gotags: binding:"required"
+  string username = 1 [(google.api.field_behavior) = REQUIRED];
+  // @gotags: binding:"required"
+  string password = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+message LoginRsp {
+  string token = 1;
+  int64 expires_at = 2;
+}
+
+
+message SmsReq {
+  // @gotags: binding:"required,mobile"
+  string mobile = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message SmsRsp {
+  string code = 1;
+}

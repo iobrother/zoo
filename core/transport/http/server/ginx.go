@@ -1,10 +1,15 @@
 package server
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/form/v4"
+	"github.com/go-playground/validator/v10"
+
+	zerrors "github.com/iobrother/zoo/core/errors"
 )
 
 var formDecoder *form.Decoder
@@ -36,7 +41,13 @@ func (c *Context) GetError() error {
 }
 
 func (c *Context) ShouldBind(v any) error {
-	return c.Context.ShouldBind(v)
+	if err := c.Context.ShouldBind(v); err != nil {
+		if errors.As(err, &validator.ValidationErrors{}) {
+			return zerrors.NewWithStatusCode(400, 400, "Bad Request", err.Error())
+		}
+		return err
+	}
+	return nil
 }
 
 func (c *Context) ShouldBindUri(v any) error {
@@ -45,12 +56,35 @@ func (c *Context) ShouldBindUri(v any) error {
 		m[v.Key] = []string{v.Value}
 	}
 
-	return formDecoder.Decode(v, m)
+	if err := formDecoder.Decode(v, m); err != nil {
+		return err
+	}
+
+	if err := binding.Validator.ValidateStruct(v); err != nil {
+		if errors.As(err, &validator.ValidationErrors{}) {
+			return zerrors.NewWithStatusCode(400, 400, "Bad Request", err.Error())
+		}
+		return err
+	}
+
+	return nil
+
 }
 
 func (c *Context) ShouldBindQuery(v any) error {
 	values := c.Request.URL.Query()
-	return formDecoder.Decode(v, values)
+	if err := formDecoder.Decode(v, values); err != nil {
+		return err
+	}
+
+	if err := binding.Validator.ValidateStruct(v); err != nil {
+		if errors.As(err, &validator.ValidationErrors{}) {
+			return zerrors.NewWithStatusCode(400, 400, "Bad Request", err.Error())
+		}
+		return err
+	}
+
+	return nil
 }
 
 type HandlerFunc func(*Context)

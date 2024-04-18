@@ -1,0 +1,15 @@
+app:
+  name: "example"
+http:
+  addr: ":5180"
+  mode: "debug"
+
+mysql:
+  dataSource: "root:123456@tcp(127.0.0.1:3306)/zoo?charset=utf8mb4&parseTime=true&loc=Local"
+  maxIdle: 10
+  maxOpen: 100
+
+redis:
+  addr: 127.0.0.1:6379
+  password: 123456
+  db: 9

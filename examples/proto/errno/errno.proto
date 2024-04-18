@@ -8,6 +8,8 @@ import "errdesc/errdesc.proto";
 
 enum ErrorReason {
   option (errdesc.default_status_code) = 500;
-  DB_ERROR = 0 [(errdesc.code) = 100101, (errdesc.msg) = "数据库错误"];
-  ORDER_NOT_EXIST = 1 [(errdesc.code) = 100201, (errdesc.msg) = "订单不存在"];
+  INTERNAL_ERROR = 0 [(errdesc.code) = 500, (errdesc.msg) = "服务器内部错误"];
+  DB_ERROR = 1 [(errdesc.code) = 100101, (errdesc.msg) = "数据库错误"];
+  ORDER_NOT_EXIST = 2 [(errdesc.code) = 100201, (errdesc.msg) = "订单不存在"];
+  USER_OR_PASSWORD_INCORRECT = 3 [(errdesc.code) = 100301, (errdesc.msg) = "用户名或密码错误"];
 }
